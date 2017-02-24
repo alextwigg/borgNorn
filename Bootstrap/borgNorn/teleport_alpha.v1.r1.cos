@@ -1,0 +1,264 @@
+*************CREATURE need [8]
+scrp 4 0 0 24
+
+** check antigen levels for illness
+	setv va10 82
+	setv va11 0.2
+	loop
+		doif chem va10 gt va11
+			setv va11 chem va10
+		endi
+		addv va10 1
+	untl va10 gt 89
+
+	doif va11 gt 0.2
+** ill
+** no pose	anim [143 144 145 146]
+	else
+		setv va01 0
+		setv va02 -100
+		loop
+			doif driv va01 gt va02
+				setv va00 va01
+				setv va02 driv va00
+			endi
+			addv va01 1
+		untl va01 gt 12
+
+**IF your most pressing drive is less than 64 then
+		doif driv va00 lt 0.25
+*do a pose
+			pose 33
+		else
+**ELSE you have a need - pose differently
+			pose 34
+			doif va00 eq 0
+				pose 35
+			endi
+			doif va00 eq 1
+				doif chem 185 gt 0.15
+					sezz "I am a protein hungry Borg"
+*teleport script*
+					inst
+					setv va99 0
+					setv va98 1
+					setv va97 0
+					loop
+						addv va97 1
+						rtar 2 8 0
+						gsub main
+					untl va99 eq 1 or va98 gt 11 or va97 gt 100
+*end teleport script**maybe subr**
+					slow
+					targ ownr
+*end borg drive protein*
+				else
+					pose 89
+				endi
+			endi
+			doif va00 eq 2
+				doif chem 185 gt 0.15
+					sezz "I am a starch hungry Borg"
+*teleport script*
+					inst
+					setv va99 0
+					setv va98 1
+					setv va97 0
+					loop
+						addv va97 1
+						rtar 2 3 0
+						gsub main
+					untl va99 eq 1 or va98 gt 11 or va97 gt 100
+*end teleport script**maybe subr**
+					slow
+					targ ownr
+*end borg drive starch*
+				else
+					pose 47
+				endi
+			endi
+			doif va00 eq 3
+*start borg drive fat*
+				doif chem 185 gt 0.15
+					inst
+					sezz "I am a fat hungry Borg"
+*teleport script*
+					inst
+					setv va99 0
+					setv va98 1
+					setv va97 0
+					loop
+						addv va97 1
+						rtar 2 11 0
+						gsub main
+					untl va99 eq 1 or va98 gt 11 or va97 gt 100
+*end teleport script**maybe subr**
+					targ ownr
+*end borg drive fat*
+				else
+					pose 36
+				endi
+			endi
+			doif va00 eq 4
+				pose 37
+			endi
+			doif va00 eq 5
+				pose 37
+			endi
+			doif va00 eq 6
+				pose 12
+			endi
+			doif va00 eq 7
+				pose 38
+			endi
+			doif va00 eq 8
+*start borg drive lonely*
+				doif chem 185 gt 0.15
+					inst
+					sezz "I am a lonely Borg"
+*teleport script*
+					inst
+					setv va99 0
+					setv va98 1
+					setv va97 0
+					loop
+						addv va97 1
+						rtar 4 0 0
+						gsub main
+					untl va99 eq 1 or va98 gt 11 or va97 gt 100
+*end teleport script**maybe subr**
+					targ ownr
+*end borg drive lonely*
+				else
+					pose 42
+				endi
+			endi
+			doif va00 eq 9
+				doif chem 185 gt 0.15
+					sezz "I am a crowded Borg"
+*teleport script*
+					inst
+					setv va99 0
+					setv va98 1
+					setv va97 0
+					loop
+						addv va97 1
+						rtar 0 0 0
+						gsub main
+					untl va99 eq 1 or va98 gt 11 or va97 gt 100
+*end teleport script**maybe subr**
+					slow
+					targ ownr
+*end borg drive crowded*
+				else
+					pose 51
+				endi
+			endi
+			doif va00 eq 10
+				anim [040 040 041 041 255]
+			endi
+			doif va00 eq 11
+				doif chem 185 gt 0.15
+					sezz "I am a bored Borg"
+*teleport script*
+					inst
+					setv va99 0
+					setv va98 1
+					setv va97 0
+					loop
+						addv va97 1
+						rtar 2 21 0
+						gsub main
+					untl va99 eq 1 or va98 gt 11 or va97 gt 100
+*end teleport script**maybe subr**
+					slow
+					targ ownr
+*end borg drive bored*
+				else
+					pose 121
+				endi
+			endi
+			doif va00 eq 12
+				anim [042 043 255]
+			endi
+		endi
+	endi
+
+	sayn
+*stim yourself with EXPRESSNEED
+	stim writ targ 20 1
+	wait 50
+
+
+	subr coord
+		subv va01 65
+		subv va02 128
+	retn
+
+	subr main
+		doif targ ne null
+			doif movs eq 0
+*set coordintates for test object
+				setv va01 posx
+				setv va02 posy
+				gsub coord
+*set coordinates for creature
+				setv va03 posx
+				setv va04 posy
+				subv va04 2
+				targ ownr
+				doif tmvf va03 va04 eq 1
+					gsub inject
+					rtar 1 1 222
+					doif tmvt va01 va02 eq 1
+						targ ownr
+						doif tmvf va03 va04 eq 1 and movs eq 0
+							setv va99 1
+							mvft va03 va04
+						else
+							addv va98 1
+						endi
+					else
+						addv va98 1
+					endi
+				else
+					addv va98 1
+				endi
+			else
+				addv va98 1
+			endi
+		else
+			addv va98 1
+		endi
+	retn
+
+*inject teleporter sub-routine*
+	subr inject
+*destination portal coordinates
+		setv va05 va03
+		setv va06 va04
+		subv va05 65
+		subv va06 115
+*departure location coordinates
+		setv va07 dftx
+		setv va08 dfty
+		subv va07 75
+		subv va08 115
+		new: simp 3 2 222 "brg_tele" 15 0 5000
+		tick 1
+		mvto va07 va08
+		wait 7
+		new: simp 3 2 222 "brg_tele" 15 0 5000
+		tick 1
+		mvto va05 va06
+		wait 3
+		targ ownr
+	retn
+endm
+
+scrp 3 2 222 9
+	snde "bgpt"
+	anim [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14]
+	over
+	kill targ
+endm

@@ -1,0 +1,177 @@
+********CREATURE - has been hit - [3]
+scrp 4 0 0 3
+	forf from
+
+* if dead stop:
+	doif dead ne 0
+		stop
+	endi
+
+	doif from eq pntr
+*IF the message came from pointer give a POINTERSLAP stim
+		stim writ targ 3 1
+	else
+*ELSE give a CREATURESLAP stim
+* this stim is done in the hit script and the strength depends
+* on the strength of the creature:
+*		stim writ targ 4 1
+	endi
+*IF unconcious stop, if asleep wake up:
+	doif uncs ne 0
+		stop
+	endi
+	doif aslp ne 0
+		aslp 0
+	endi
+*If BorgNorn Inject Shield*
+	doif chem 185 gt 0.15
+		inst
+*record Position
+		setv va00 posx
+		setv va01 posy
+*sets the shield sprite by life stage
+		doif cage lt 2
+			sets va02 "bgsh1"
+			setv va03 1
+		elif cage eq 2 or cage eq 3
+			sets va02 "bgsh2"
+			setv va03 1
+		elif cage gt 3
+			sets va02 "bgsh3"
+			setv va03 1
+		endi
+*injects shield
+		new: simp 3 8 222 va02 11 0 3000
+		seta ov00 ownr
+*sets offset dependant on life stage
+		doif va03 eq 1
+			subv va00 45
+			subv va01 70
+			setv ov01 1
+		elif va03 eq 2
+			subv va00 45
+			subv va01 90
+			setv ov01 2
+		elif va03 eq 3
+			subv va00 65
+			subv va01 110
+			setv ov01 3
+		endi
+		mvto va00 va01
+		tick 1
+		targ ownr
+		stim writ from 4 0.25
+		slow
+	endi
+**end borg shield**
+	doif gnus ne 2
+		setv va00 rand 0 4
+		doif va00 lt 3
+			snde "ow!1"
+		endi
+		doif va00 eq 3
+			snde "ow!2"
+		endi
+		doif va00 eq 4
+			snde "ow!3"
+		endi
+	else
+* grendel sound
+		snde "glaf"
+	endi
+*BorgNorn Assimilation Script*
+	inst
+	lock
+*determine if OWNR is BorgNorn
+	doif chem 185 lt 0.15
+		targ from
+*determine if FROM is Borgnorn
+		doif chem 185 gt 0.15
+			targ ownr
+*lock and zombie the norn to begin assimilation
+			lock
+			zomb 1
+			sezz "Assimilation initiated"
+*begin gene splicing
+			rtar 2 2 2323
+			doif targ ne null
+				seta va05 targ
+				gene cros targ 5 targ 2 ownr 0 128 128 128 128
+				gene cros targ 6 targ 5 from 0 128 128 128 128
+				gene clon targ 2 targ 5
+				sets va06 gtos 2
+				targ ownr
+*record OWNR data
+				setv va00 spcs
+				setv va01 dftx
+				setv va02 dfty
+				slow
+*Create the spliced BorgNorn and set parameters
+				newc 4 va05 6 va00 0
+				accg game "c3_creature_accg"
+				bhvr game "c3_creature_bhvr"
+				attr game "c3_creature_attr"
+				perm game "c3_creature_perm"
+				setv va91 11
+				addv va91 gnus
+				emit va91 0.5
+				drea 1
+*Record the TARG of the BN
+				seta va03 targ
+				wait 100
+				targ ownr
+				sezz "Assimilation 50% complete"
+				wait 100
+*Switch the two creatures
+				inst
+				targ va03
+				pose 75
+				mvsf va01 va02
+				aslp 0
+				vocb
+				sets va02 gtos 0
+				sets va03 ""
+				sets va04 "null holder"
+				hist evnt gtos 0 185 va06 va06
+				born
+				slow
+				sezz "Assimilation Complete"
+				targ ownr
+				kill targ
+			else
+				targ ownr
+				zomb 0
+				sezz "Assimilation aborted"
+			endi
+		endi
+
+		doif rand 1 5 eq 5
+			like from
+		endi
+	endi
+endm
+
+
+scrp 3 8 222 9
+	anim [0 4 5]
+	over
+	inst
+	setv va00 posx
+	setv va01 wdth
+	divv va01 2
+	addv va00 va01
+	etch 4 0 0
+		doif targ ne mv00
+			doif posx lt va00
+				velo rand -20 -10 rand -15 -5
+			elif posx gt va00 or posx eq va00
+				velo rand 20 10 rand -15 -5
+			endi
+		endi
+		snde "punc"
+	next
+	slow
+	anim [5 6 7 8 9 10]
+	over
+	kill targ
+endm
