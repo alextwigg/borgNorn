@@ -7,6 +7,7 @@ accg 5
 pat: butt 1 "assm" 4 3 0 -40 1 [0] 1001 0
 pat: butt 2 "assm" 3 3 40 -40 1 [0] 1002 0
 pat: butt 3 "assm" 6 1 80 -40 1 [0] 1003 0
+pat: butt 4 "assm" 5 2 120 -40 1 [0] 1004 0
 gene load targ 1 "borgNorn.v2"
 gene load targ 2 "borgNorn.v2"
 *ov00 = click counter
@@ -14,8 +15,11 @@ setv ov00 0
 *ov01 = norn storage
 *ov02 = zomb counter
 setv ov02 0
+tick 20
 enum 4 0 0
-	stpt
+	doif targ ne null
+		stpt
+	endi
 next
 ject "borg_life_events.cos" 7
 ject "teleport_alpha.v1.r1.cos" 2
@@ -23,11 +27,22 @@ ject "borg_shield.cos" 2
 ject "alcove_mesa.cos" 7
 ject "borg_sleep.cos" 2
 
+
 *********************************************
 *********************************************
 **ASSIMILATION DEVICE SCRIPTS**
 *********************************************
 *********************************************
+scrp 2 2 2323 9
+	enum 4 0 0
+		inst
+		doif targ ne null and chem 185 gt 0
+			chem 215 1
+		endi
+		slow
+	next
+endm
+
 scrp 2 2 2323 1
 	doif ov00 eq 0
 		targ norn
@@ -103,10 +118,24 @@ scrp 2 2 2323 1001
 	part 1
 	doif pose eq 0
 		pose 1
+		inst
+		enum 4 0 0
+			doif targ ne null
+				stpt
+			endi
+		next
+		ject "DS creatureDecisions.cos" 7
+		slow
 	elif pose eq 1
-		pose 2
-	elif pose eq 2
 		pose 0
+		inst
+		enum 4 0 0
+			doif targ ne null
+				stpt
+			endi
+		next
+		ject "teleport_alpha.v1.r1.cos" 2
+		slow
 	endi
 endm
 
@@ -146,6 +175,18 @@ scrp 2 2 2323 1003
 			vocb
 		next
 		setv ov02 0
+	endi
+endm
+
+scrp 2 2 2323 1004
+	doif tick eq 20
+		tick 0
+		part 4
+		pose 1
+	elif tick eq 0
+		tick 20
+		part 4
+		pose 0
 	endi
 endm
 
