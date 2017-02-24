@@ -1,0 +1,137 @@
+
+***************CREATURE - Sleep - involuntary[5]
+scrp 4 0 0 69
+	lock
+	ltcy 5 90 190
+	drop
+*borgnorn sleep initiation
+	doif chem 185 gt 0.15
+		inst
+*put the BN to sleep and pose it
+		aslp 1
+		pose 33
+		dirn 1
+*set BN coordinates and record targ
+		setv va03 posx
+		setv va04 posy
+		subv va03 75
+		subv va04 115
+		seta va02 targ
+		targ ownr
+*set loop limits
+		setv va07 0
+		setv va08 totl 3 3 222
+		setv va09 1
+		seta va10 null
+		loop
+*look for a free alcove
+			rtar 3 3 222
+			doif targ ne null
+				doif ov00 eq 1
+*if free alcove found, record data and teleport BN
+					setv va09 0
+					setv ov00 0
+					setv va05 posx
+					setv va06 posy
+					subv va05 68
+					addv va06 20
+					seta va10 targ
+					new: simp 3 2 222 "brg_tele" 15 0 5000
+					tick 1
+					mvto va03 va04
+					wait 7
+					new: simp 3 2 222 "brg_tele" 15 0 5000
+					tick 1
+					mvto va05 va06
+					wait 3
+					spas va10 ownr
+					targ va10
+					anim [1 2 3 4 5 255]
+				elif ov00 eq 0
+					addv va07 1
+				endi
+			endi
+		untl va09 eq 0 or va07 eq va08
+		targ ownr
+		slow
+		doif va09 eq 0
+			sezz "Regeneration Initiated"
+		else
+			sezz "Remote Regeneration Initiated"
+		endi
+	else
+*end of initiation
+		pose 57
+	endi
+	wait 25
+*stim yourself with REST
+	stim writ targ 21 1
+
+
+*go to sleep
+	aslp 1
+
+* create zzzz's
+**don't inject zzzz's for borgnorn
+	doif chem 185 lt 0.15
+		new: simp 1 2 28 "zzzz" 17 0 6000
+		seta ov00 ownr
+		setv ov01 0
+		tick 5
+	endi
+
+	targ ownr
+
+*start to dream
+	setv va00 0
+	loop
+		drea 1
+		doif va00 eq 0
+*borgnonrn don't snore
+			doif chem 185 lt 0.15
+				doif gnus eq 2
+					snde "gsnr"
+				else
+					snde "zzzz"
+				endi
+			endi
+		endi
+*borgnorn don't change pose
+		doif chem 185 lt 0.15
+			pose 58
+		endi
+*regeneration is quicker than sleep
+		doif chem 185 gt 0.15
+			wait 10
+		else
+			wait 20
+		endi
+*stim yourself with SLEEP
+		stim writ targ 33 1
+
+		addv va00 1
+		doif va00 >= 10
+			setv va00 0
+		endi
+	untl driv 7 lt 0.10 and driv 6 lt 0.10
+	doif chem 185 gt 0.15
+		sezz "Regeneration Complete"
+		inst
+		targ va10
+		doif targ ne null
+			dpas 0 0 0
+			setv ov00 1
+			pose 0
+		endi
+		targ ownr
+		slow
+	endi
+*wake up
+	aslp 0
+	pose 58
+	wait 25
+	unlk
+endm
+
+rscr
+scrx 4 0 0 69

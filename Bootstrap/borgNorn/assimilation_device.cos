@@ -14,9 +14,14 @@ setv ov00 0
 *ov01 = norn storage
 *ov02 = zomb counter
 setv ov02 0
+enum 4 0 0
+	stpt
+next
 ject "borg_life_events.cos" 7
 ject "teleport_alpha.v1.r1.cos" 2
 ject "borg_shield.cos" 2
+ject "alcove_mesa.cos" 7
+ject "borg_sleep.cos" 2
 
 *********************************************
 *********************************************
@@ -157,6 +162,10 @@ scrx 2 2 2323 1
 enum 2 2 2323
 	kill targ
 next
+enum 4 0 0
+	stpt
+next
 ject "DS life event factory - PHOTOGRAPHS THE DEAD.cos" 7
 ject "DS creatureDecisions.cos" 7
+ject "DS creatureInvoluntary.cos" 7
 endm
