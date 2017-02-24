@@ -1,0 +1,285 @@
+new: simp 1 2 24 "blnk" 0 0 0
+attr 16
+
+setv game "ds_number_of_life_events" 10
+
+scrp 1 2 24 127
+	inst
+	doif _p1_ ne "null holder"
+		setv va00 hist type _p1_ _p2_
+		doif va00 = 7
+* died
+			setv va01 0
+		elif va00 = 11
+* laid
+			setv va01 1
+		elif va00 = 3
+* born
+			doif hist find _p1_ 185 -1 ne -1
+				setv va01 4
+			else
+				setv va01 2
+			endi
+		elif va00 = 8
+* pregnant
+			setv va01 3
+		elif va00 = 185
+*assimilated
+			stop
+		else
+			stop
+		endi
+
+* make birth photographer, who will
+* take a photo after about five seconds
+		seta va02 mtoc _p1_
+		doif va00 = 3 or va00 = 185 and va02 <> null
+			new: simp 1 2 37 "blnk" 0 0 0
+			seta ov00 va02
+			sets ov01 _p1_
+* randomise slightly, so creatures are more
+* likely to be in different poses
+			tick rand 90 120
+		endi
+		targ ownr
+
+* make DEATH photographer, who will
+* take a photo quite quickly
+		seta va02 mtoc _p1_
+		doif va00 = 7 and va02 <> null
+			new: simp 1 2 37 "blnk" 0 0 0
+			seta ov00 va02
+			sets ov01 _p1_
+* randomise slightly, so creatures are more
+* likely to be in different poses
+			tick rand 0 30
+		endi
+		targ ownr
+
+
+
+
+		doif game "Grettin" = 0
+* if it's not a Norn, ignore it
+			doif 1 <> hist gnus _p1_
+				doif va00 = 7
+					hist utxt _p1_ _p2_ "don't register"
+				endi
+				stop
+			endi
+		endi
+
+* music
+		doif va00 = 3
+			strk 30 "ds_music.mng\\Bleep"
+		elif va00 = 7
+			strk 20 "ds_music.mng\\MetallicChords"
+		endi
+
+		setv va10 3
+		setv va12 0
+		enum 1 2 25
+			setv va11 posl
+			subv va11 wndl
+			doif va11 >= va10
+				setv va10 va11
+				addv va10 wdth
+				setv va12 ov99
+			endi
+		next
+
+*	create agent to display event
+		new: simp 1 2 25 "ds_life_events" 5 0 8505
+		clac 1000
+		pose va01
+		attr 308
+		plne 9000
+		flto va10 90
+		seta va23 targ
+		setv ov99 va12
+		doif ov99 > 0
+			tick 1
+		endi
+		setv ov98 0
+
+* 	tooltip
+		sets va75 hist name _p1_
+		doif va75 = ""
+			sets va75 read "Life Event ToolTip Genus" hist gnus _p1_
+		endi
+		doif va01 ne 4
+			sets va74 read "Life Event ToolTip" va01
+			adds va75 " "
+			adds va75 va74
+* 	egglaid - who is the mother?
+			doif va01 = 1
+				sets va77 hist mon1 _p1_ _p2_
+				sets va76 hist name va77
+				doif va76 = ""
+					adds va76 read "Life Event ToolTip Genus" hist gnus va77
+				endi
+				sets va75 va76
+				adds va75 " "
+				adds va75 read "Life Event ToolTip" 1
+			endi
+* 	set the tip
+			sets name "tooltip" va75
+		elif va01 eq 4
+			sets name "tooltip" "A creature has been assimilated"
+		endi
+
+* 	store target agent and camera position
+		seta ov00 mtoc _p1_
+		doif ov00 = null
+			seta ov00 mtoa _p1_
+		endi
+		doif ov00 <> null
+			targ ov00
+			doif room targ = -1 or carr = game "c3_inventory"
+				setv va21 0
+				setv va22 0
+			else
+				setv va21 posx
+				setv va22 posy
+			endi
+		else
+			setv va21 0
+			setv va22 0
+		endi
+
+		targ va23
+		setv ov01 va21
+		setv ov02 va22
+		setv ov03 va00
+
+* if too many agents, lose left hand one
+*	setv va50 wndw
+*	divv va50 2
+*	doif va10 > va50
+
+
+		setv va00 game "ds_number_of_life_events"
+		setv va01 totl 1 2 25
+		doif va01 gt va00
+			enum 1 2 25
+				tick 1
+				setv va51 posl
+				subv va51 wndl
+				subv va51 ov99
+				doif va51 < wdth
+					setv ov98 1
+				endi
+				addv ov99 wdth
+			next
+		endi
+	endi
+endm
+
+* birth photographer takes photo,
+* and self destructs
+scrp 1 2 37 9
+	inst
+	doif ov00 <> null
+		sets va00 ov01
+		adds va00 "-"
+		adds va00 vtos hist coun ov01
+		targ ov00
+		snap va00 posx posy 119 139 100
+		targ ownr
+		hist evnt ov01 13 "" ""
+		setv va01 hist coun ov01
+		subv va01 1
+		dbg: asrt 13 = hist type ov01 va01
+		hist foto ov01 va01 va00
+	endi
+	kill ownr
+endm
+
+scrp 1 2 25 1000
+	inst
+	setv va10 posl
+*	dbg: outs "pos"
+*	dbg: outv posl
+*	dbg: outv posr
+*	dbg: outs "enum"
+	enum 1 2 25
+*		dbg: outs "next"
+*		dbg: outv posl
+*		dbg: outv posr
+		doif posl >= va10
+			addv ov99 wdth
+			tick 1
+		endi
+	next
+	targ ownr
+* if agent still about, use that,
+* otherwise used initial camera 
+* location
+	doif ov00 = null
+		cmrp ov01 ov02 0
+	else
+		targ ov00
+		doif room targ ne -1 and carr ne game "c3_inventory"
+			cmrt 0
+
+			doif type ov00 = 7
+				targ ov00
+				norn ov00
+			endi
+		else
+			cmrp ov01 ov02 0
+		endi
+	endi
+	inst
+* if a death event then
+* signal the death cloud to fire, so
+* old bodies don't hang about
+	doif ov03 = 3
+		doif ov00 <> null
+			targ ov00
+			setv ov81 1
+		endi
+	endi
+	kill ownr
+endm
+
+scrp 1 2 25 9
+	inst
+	doif ov99 >= 8
+		mvby -8 0
+		subv ov99 8
+	else
+		negv ov99
+		mvby ov99 0
+		setv ov99 0
+	endi
+	doif ov99 = 0
+		tick 0
+*		dbg: outv ov98
+		doif ov98 <> 0
+* scrolled off screen
+			inst
+* if a death event has scrolled off
+* signal the death cloud to fire, so
+* old bodies don't hang about
+			doif ov03 = 3
+				doif ov00 <> null
+					targ ov00
+					setv ov81 1
+				endi
+			endi
+			kill ownr
+		endi
+	endi
+endm
+
+rscr
+enum 1 2 24
+	kill targ
+next
+enum 1 2 25
+	kill targ
+next
+enum 1 2 37
+	kill targ
+next

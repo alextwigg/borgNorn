@@ -1,0 +1,159 @@
+inst
+new: comp 2 2 2323 "assm" 7 0 5000
+mvto 1052 9425
+attr 199
+elas 0
+accg 5
+pat: butt 1 "assm" 4 3 0 -40 1 [0] 1001 0
+pat: butt 2 "assm" 3 3 40 -40 1 [0] 1002 0
+pat: butt 3 "assm" 6 1 80 -40 1 [0] 1003 0
+gene load targ 1 "borgNorn.v2"
+gene load targ 2 "borgNorn.v2"
+*ov00 = click counter
+setv ov00 0
+*ov01 = norn storage
+*ov02 = zomb counter
+setv ov02 0
+ject "borg_life_events.cos" 7
+
+*********************************************
+*********************************************
+**ASSIMILATION DEVICE SCRIPTS**
+*********************************************
+*********************************************
+scrp 2 2 2323 1
+	doif ov00 eq 0
+		targ norn
+		doif targ ne null
+			sets va00 gtos 0
+			gene load ownr 3 va00
+			targ ownr
+			pose 1
+			setv ov00 1
+		else
+			targ ownr
+			anim [0 2 0 2 0 2 0 2 0]
+		endi
+	elif ov00 eq 1
+		targ norn
+		doif targ ne null
+			sets va00 gtos 0
+			gene load ownr 4 va00
+			seta mv01 targ
+			zomb 1
+			targ ownr
+			pose 2
+			setv ov00 2
+		else
+			targ ownr
+			anim [0 2 0 2 0 2 0 2 0]
+		endi
+		targ ownr
+	elif ov00 eq 2
+		gene cros ownr 5 ownr 2 ownr 3 128 128 128 128
+		gene cros ownr 6 ownr 4 ownr 5 128 128 128 128
+		gene clon ownr 2 ownr 5
+		pose 2
+		setv ov00 3
+		pose 0
+		setv ov00 0
+		inst
+		targ mv01
+		setv va00 dftx
+		setv va01 dfty
+*setv va99 pose
+		setv va03 dirn
+		newc 4 ownr 6 0 0
+		gsub labour
+		doif tmvf va00 va01 eq 1
+			mvft va00 va01
+		else
+			mvsf va00 va01
+		endi
+*pose va02
+		dirn va03
+		targ mv01
+		kill targ
+		slow
+		targ ownr
+	endi
+
+	subr labour
+		accg game "c3_creature_accg"
+		bhvr game "c3_creature_bhvr"
+		attr game "c3_creature_attr"
+		perm game "c3_creature_perm"
+		setv va91 11
+		addv va91 gnus
+		emit va91 0.5
+		drea 1
+		aslp 0
+		born
+	retn
+endm
+
+scrp 2 2 2323 1001
+	part 1
+	doif pose eq 0
+		pose 1
+	elif pose eq 1
+		pose 2
+	elif pose eq 2
+		pose 0
+	endi
+endm
+
+scrp 2 2 2323 1002
+	setv va00 posx
+	setv va01 posy
+	newc 4 ownr 1 0 0
+	inst
+	accg game "c3_creature_accg"
+	bhvr game "c3_creature_bhvr"
+	attr game "c3_creature_attr"
+	perm game "c3_creature_perm"
+	setv va91 11
+	addv va91 gnus
+	emit va91 0.5
+	emit 20 0.5
+	emit 19 0.5
+	drea 1
+	aslp 0
+	hist evnt gtos 0 185 gtos 0 gtos 0
+	born
+	mvsf va00 va01
+	targ ownr
+	gene load targ 1 "borgNorn.v2"
+endm
+
+scrp 2 2 2323 1003
+	doif ov02 eq 0
+		enum 4 0 0
+			zomb 1
+			vocb
+		next
+		setv ov02 1
+	elif ov02 eq 1
+		enum 4 0 0
+			zomb 0
+			vocb
+		next
+		setv ov02 0
+	endi
+endm
+
+*********************************************
+*********************************************
+**END ASSIMILATION DEVICE SCRIPTS**
+*********************************************
+*********************************************
+
+
+rscr
+inst
+scrx 2 2 2323 1
+enum 2 2 2323
+	kill targ
+next
+ject "DS life event factory - PHOTOGRAPHS THE DEAD.cos" 7
+endm
