@@ -27,6 +27,16 @@ ject "borg_shield.cos" 2
 ject "alcove_mesa.cos" 7
 ject "borg_sleep.cos" 2
 
+*Inject the Teleport Tester
+new: comp 1 1 222 "bgts" 4 0 100
+pupt 0 0 0
+mvto 1154 9513
+perm 0
+attr 199
+accg 10
+elas 0
+pupt 0 0 0
+
 
 *********************************************
 *********************************************
@@ -34,6 +44,8 @@ ject "borg_sleep.cos" 2
 *********************************************
 *********************************************
 scrp 2 2 2323 9
+**Timer script injects chem 215 (Contraceptin) into BN.
+**Setting tick to 0 will stop the process and allow BN to breed.
 	enum 4 0 0
 		inst
 		doif targ ne null and chem 185 gt 0
@@ -44,6 +56,10 @@ scrp 2 2 2323 9
 endm
 
 scrp 2 2 2323 1
+**Allows for manual assimilation of a creature.
+**Click one sets the creature doing the assimilating.
+**Click two sets the creature to be assimilated.
+**Click three triggers the actual assimilation.
 	doif ov00 eq 0
 		targ norn
 		doif targ ne null
@@ -110,11 +126,13 @@ scrp 2 2 2323 1
 		emit va91 0.5
 		drea 1
 		aslp 0
+		hist evnt gtos 0 185 gtos 0 gtos 0
 		born
 	retn
 endm
 
 scrp 2 2 2323 1001
+**First button. Turn teleportation on and off.
 	part 1
 	doif pose eq 0
 		pose 1
@@ -140,6 +158,7 @@ scrp 2 2 2323 1001
 endm
 
 scrp 2 2 2323 1002
+**Second button injects a borg norn.
 	setv va00 posx
 	setv va01 posy
 	newc 4 ownr 1 0 0
@@ -163,6 +182,7 @@ scrp 2 2 2323 1002
 endm
 
 scrp 2 2 2323 1003
+**Third button zombifies and unzombifies all creatures.
 	doif ov02 eq 0
 		enum 4 0 0
 			zomb 1
@@ -179,6 +199,7 @@ scrp 2 2 2323 1003
 endm
 
 scrp 2 2 2323 1004
+**Toggles the timer to allow breeding.
 	doif tick eq 20
 		tick 0
 		part 4
