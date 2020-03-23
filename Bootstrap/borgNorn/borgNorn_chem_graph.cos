@@ -1,0 +1,51 @@
+inst
+new: comp 3 2 222 "bg_graph" 1 0 9999
+attr 36
+flto 0 250
+setv ov00 0
+setv ov01 0
+pat: grph 1001 "bg_graph" 1 18 21 1 15
+part 1001
+grpl 0 255 0 0 1
+grpl 0 255 128 0 1
+grpl 255 0 0 0 1
+tick 20
+
+scrp 3 2 222 9
+	targ norn
+	doif targ ne null
+		setv va00 chem 185
+		setv va01 chem 186
+		setv va02 chem 196
+		targ ownr
+		part 1001
+		grpv 0 va00
+		grpv 1 va01
+		grpv 2 va02
+	endi
+endm
+
+scrp 3 2 222 1
+	doif ov00 eq 0
+		lock
+		loop
+			subv ov01 4
+			flto ov01 250
+		untl ov01 lt -187
+		setv ov00 1
+		unlk
+	elif ov00 eq 1
+		lock
+		loop
+			addv ov01 4
+			flto ov01 250
+		untl ov01 eq 0
+		setv ov00 0
+		unlk
+	endi
+endm
+
+rscr
+enum 3 2 222
+	kill targ
+next

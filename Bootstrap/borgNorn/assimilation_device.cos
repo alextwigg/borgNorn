@@ -8,8 +8,8 @@ pat: butt 1 "assm" 4 3 0 -40 1 [0] 1001 0
 pat: butt 2 "assm" 3 3 40 -40 1 [0] 1002 0
 pat: butt 3 "assm" 6 1 80 -40 1 [0] 1003 0
 pat: butt 4 "assm" 5 2 120 -40 1 [0] 1004 0
-gene load targ 1 "borgNorn.v2"
-gene load targ 2 "borgNorn.v2"
+gene load targ 1 "bgn_v2"
+gene load targ 2 "bgn_v2"
 *ov00 = click counter
 setv ov00 0
 *ov01 = norn storage
@@ -26,6 +26,7 @@ ject "teleport_alpha.v1.r1.cos" 2
 ject "borg_shield.cos" 2
 ject "alcove_mesa.cos" 7
 ject "borg_sleep.cos" 2
+ject "borgNorn_chem_graph.cos" 7
 
 *Inject the Teleport Tester
 new: comp 1 1 222 "bgts" 4 0 100
@@ -46,12 +47,11 @@ pupt 0 0 0
 scrp 2 2 2323 9
 **Timer script injects chem 215 (Contraceptin) into BN.
 **Setting tick to 0 will stop the process and allow BN to breed.
+	inst
 	enum 4 0 0
-		inst
 		doif targ ne null and chem 185 gt 0
 			chem 215 1
 		endi
-		slow
 	next
 endm
 
@@ -178,7 +178,7 @@ scrp 2 2 2323 1002
 	born
 	mvsf va00 va01
 	targ ownr
-	gene load targ 1 "borgNorn.v2"
+	gene load targ 1 "borgNorn.v3"
 endm
 
 scrp 2 2 2323 1003
@@ -222,6 +222,9 @@ rscr
 inst
 scrx 2 2 2323 1
 enum 2 2 2323
+	kill targ
+next
+enum 1 1 222
 	kill targ
 next
 enum 4 0 0

@@ -1,0 +1,219 @@
+inst
+new: simp 2 3 222 "bgprb" 22 0 1000
+mvto 1052 9425
+attr 199
+bhvr 8
+accg 0
+elas 10
+fric 70
+aero 8
+rnge 200
+tick 30
+*ov00 is the direction to travel
+*0 = right 1 = left
+setv ov00 rand 0 1
+*ov01 is the timer for teleportation
+setv ov01 0
+*Tracks how long the probe has followed a creature
+setv ov02 0
+*ov03 acts as a click counter
+setv ov03 0
+*Acts as a delay timer so the probe waits before following a creature.
+setv ov04 0
+
+scrp 2 3 222 9
+	setv va00 posx
+	setv va01 posy
+	setv va02 rand 1 9
+	doif va02 eq 1
+		anim [15 16 17 19 17 19 17]
+		over
+		new: simp 2 11 9 "carr" 0 0 563
+		attr 194
+		bhvr 48
+		perm 64
+		accg 1
+		elas 20
+		fric 99
+		pose 6
+		mvsf va00 va01
+		emit 8 .5
+		tick 1000
+		setv va09 rand 0 1
+		doif va09 = 0
+			sets name "direction" "left"
+		elif va09 = 1
+			sets name "direction" "right"
+		endi
+		velo rand -5 5 rand -5 9
+*			nut
+		targ ownr
+		anim [16 15 0]
+		over
+	elif va02 eq 2
+		anim [15 16 17 20 17 20 17]
+		over
+		new: simp 2 3 17 "justanut pod" 9 18 51
+		attr 194
+		perm 64
+		bhvr 48
+		pose 1
+		accg 3
+		aero 5
+		fric 99
+		elas 20
+		mvsf va00 va01
+		emit 7 .5
+		tick 200
+		velo rand -5 5 rand -5 9
+*			lemon
+		targ ownr
+		anim [16 15 0]
+		over
+	elif va02 eq 3
+		anim [15 16 17 21 17 21 17]
+		over
+		new: simp 2 8 7 "ds lemon pod" 2 30 355
+		attr 194
+		bhvr 48
+		accg 2
+		perm 64
+		fric 100
+		elas 30
+		aero 2
+		sets name "eaten" "no"
+		mvsf va00 va01
+** make it emit fruit smell
+		emit 6 .5
+		tick 1000
+		velo rand -5 5 rand -5 9
+		targ ownr
+		anim [16 15 0]
+		over
+	endi
+*escape script...move at least 300 pixels away
+	doif ov01 gt 100 or ov02 gt 15
+		loop
+			inst
+			rtar 0 0 0
+			doif targ ne null
+				setv va00 posx
+				setv va01 posy
+				subv va01 100
+				setv va02 relx targ ownr
+				setv va03 rely targ ownr
+				slow
+				absv va02
+				absv va03
+				setv va04 0
+				doif va02 gt 300 or va03 gt 300
+					setv va04 1
+				endi
+				targ ownr
+			endi
+		untl tmvt va00 va01 eq 1 and va04 eq 1
+		mvto va00 va01
+		setv ov01 0
+		doif ov02 gt 15
+			setv ov04 0
+		endi
+		setv ov02 0
+	elif ov04 gt 100
+		addv ov01 1
+		star 4 0 0
+		doif targ ne null
+			addv mv02 1
+			setv va00 relx ownr targ
+			setv va01 rely ownr targ
+			subv va01 100
+			divv va00 10
+			divv va01 10
+			doif va00 gt 10
+				setv va00 10
+			elif va00 lt -10
+				setv va00 -10
+			endi
+			doif va01 gt 5
+				setv va01 5
+			elif va01 lt -5
+				setv va01 -5
+			endi
+			addv va00 rand -3 3
+			addv va01 rand -3 3
+			targ ownr
+			velo va00 va01
+		else
+			targ ownr
+			gsub move
+		endi
+	else
+		gsub move
+	endi
+
+	subr move
+		doif ov00 eq 0
+			addv ov04 1
+			doif obst rght gt 50
+				velo rand 3 7 rand -2 2
+			elif obst rght lt 51
+				setv ov00 1
+				anim [14 13 12 11 10 9 8 7 6 5 4 3 2 1 0]
+			endi
+		elif ov00 eq 1
+			addv ov04 1
+			doif obst left gt 50
+				velo rand -3 -7 rand -2 2
+			elif obst left lt 51
+				setv ov00 0
+				anim [1 2 3 4 5 6 7 8 9 10 11 12 13 14 0]
+			endi
+		endi
+	retn
+endm
+
+scrp 2 3 222 3
+	targ from
+	doif fmly eq 4
+		stim writ targ 97 1
+		targ ownr
+		accg 2
+		wait 100
+		accg 0
+		anim [1 2 3 4 5 6 7 8 9 10 11 12 13 14 0]
+		velo 0 -10
+		wait 10
+		setv ov01 101
+	endi
+endm
+
+
+scrp 2 3 222 1
+	doif ov03 eq 0
+		setv ov03 1
+		loop
+			inst
+			setv va00 posx
+			setv va01 posy
+			targ pntr
+			setv va02 posx
+			setv va03 posy
+			targ ownr
+			line 0 0 0 0 0 0 0 0 0
+			line va00 va01 va02 va03 255 0 0 0 0
+			slow
+		untl ov03 eq 0
+		line 0 0 0 0 0 0 0 0 0
+	elif ov03 eq 1
+		setv ov03 0
+		line 0 0 0 0 0 0 0 0 0
+	endi
+endm
+
+
+rscr
+enum 2 3 222
+	kill targ
+next
+scrx 2 3 222 9
+scrx 2 3 222 3
+scrx 2 3 222 1
