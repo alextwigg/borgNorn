@@ -1,0 +1,26 @@
+inst
+new: simp 2 3 266 "bgprb" 22 0 1000
+mvto 1052 9425
+attr 199
+accg 0
+elas 10
+fric 70
+aero 8
+rnge 200
+tick 200
+
+scrp 2 3 266 9
+	inst
+	enum 4 0 0
+		doif cage gt 4
+			chem 67 1
+		endi
+	next
+endm
+
+rscr
+enum 2 3 266
+	kill targ
+next
+scrx 2 3 266 9
+endm
