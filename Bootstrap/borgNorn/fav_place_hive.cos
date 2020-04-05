@@ -1,0 +1,5 @@
+inst
+new: simp 1 3 222 "fav_place_hive" 1 0 1
+attr 272
+mvto 2608 7803
+tick 10
