@@ -1,0 +1,57 @@
+inst
+rtar 1 1 222
+setv va00 posx
+setv va01 posy
+new: simp 2 2 222 "hive_door_1" 1 0 1
+attr 4
+bhvr 1
+addv va00 1942
+addv va01 1022
+mvto va00 va01
+setv va02 grap va00 va01
+new: simp 2 2 223 "hive_door_mesa" 1 0 1
+attr 4
+bhvr 1
+mvto 348 9195
+setv va03 grap 400 9195
+link va03 va02 100
+endm
+
+scrp 2 2 222 1
+	inst
+	rtar 2 2 223
+	doif targ ne null
+		setv va00 posx
+		setv va01 posy
+		doif from eq pntr
+			cmrp va00 va01 0
+		elif crea from eq 1
+			targ from
+			mvsf va00 va01
+		endi
+	endi
+endm
+
+scrp 2 2 223 1
+	inst
+	rtar 2 2 222
+	doif targ ne null
+		setv va00 posx
+		setv va01 posy
+		doif from eq pntr
+			cmrp va00 va01 0
+		elif crea from eq 1
+			targ from
+			mvsf va00 va01
+			stim writ from 13 0.2
+		endi
+	endi
+endm
+
+rscr
+enum 2 2 222
+	kill targ
+next
+enum 2 2 223
+	kill targ
+next

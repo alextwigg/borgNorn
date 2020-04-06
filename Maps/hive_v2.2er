@@ -425,6 +425,14 @@ Room Type
 E:\Work\Creatures Development\workspace\borgNorn\Raw Images\hive.v2.bmp
 
 138
+0
+2700 2753 7804 8011 7804 8008
+5
+
+1
+2753 2791 7804 7944 7804 7873
+5
+
 512
 747 880 6866 7034 6866 7034
 2
@@ -641,10 +649,6 @@ E:\Work\Creatures Development\workspace\borgNorn\Raw Images\hive.v2.bmp
 2742 2791 7590 7604 7590 7604
 5
 
-568
-2742 2791 7804 7985 7804 7874
-6
-
 570
 2693 2742 7446 7589 7446 7590
 5
@@ -857,10 +861,6 @@ E:\Work\Creatures Development\workspace\borgNorn\Raw Images\hive.v2.bmp
 2693 2791 7604 7804 7604 7804
 0
 
-741
-2700 2742 7804 8011 7804 7985
-6
-
 742
 2625 2693 7602 7804 7604 7804
 0
@@ -978,6 +978,18 @@ E:\Work\Creatures Development\workspace\borgNorn\Raw Images\hive.v2.bmp
 0
 
 285
+0 1
+1
+100
+0 740
+1
+100
+0 751
+1
+100
+1 740
+1
+100
 512 513
 1
 100
@@ -1332,12 +1344,6 @@ E:\Work\Creatures Development\workspace\borgNorn\Raw Images\hive.v2.bmp
 567 740
 1
 0
-568 740
-1
-100
-568 741
-1
-100
 570 571
 1
 100
@@ -1656,16 +1662,10 @@ E:\Work\Creatures Development\workspace\borgNorn\Raw Images\hive.v2.bmp
 739 740
 1
 0
-740 741
-1
-100
 740 742
 1
 100
 740 751
-1
-100
-741 751
 1
 100
 742 743

@@ -1,0 +1,50 @@
+inst
+setv va03 0
+loop
+	rtar 1 1 222
+	setv va00 posx
+	setv va01 posy
+	addv va00 1437
+	addv va00 rand -400 400
+	addv va01 1170
+	setv va02 rand 100 6000
+	new: comp 2 4 222 "tree_fungus" 7 0 va00
+	attr 192
+	elas 0
+	fric 100
+	tick 50
+	mvto va00 va01
+	addv va03 1
+**Set vars**
+**
+*ov00 is the pose of the last piece
+	setv ov00 0
+*ov01 is the parent part
+	seta ov01 null
+*ov02 is the plane of the object
+	setv ov02 va02
+
+untl va03 eq 6
+
+scrp 2 4 222 9
+	doif obst _up_ gt 50
+		tick 0
+		setv va00 posl
+		setv va01 post
+		subv va01 29
+		new: comp 2 4 222 "tree_fungus" 7 0 mv02
+		attr 68
+		elas 0
+		fric 100
+		tick 50
+		setv ov00 0
+		seta ov01 ownr
+		setv ov02 mv02
+		mvto va00 va01
+	endi
+endm
+
+rscr
+enum 2 4 222
+	kill targ
+next

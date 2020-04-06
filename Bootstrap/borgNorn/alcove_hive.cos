@@ -1,0 +1,93 @@
+inst
+rtar 1 1 222
+setv va00 posx
+setv va01 posy
+addv va00 82
+addv va01 75
+gsub inject
+mvto va00 va01
+addv va00 175
+gsub inject
+mvto va00 va01
+addv va00 175
+gsub inject
+mvto va00 va01
+addv va00 175
+gsub inject
+mvto va00 va01
+
+addv va01 192
+gsub inject
+mvto va00 va01
+subv va00 175
+gsub inject
+mvto va00 va01
+subv va00 175
+gsub inject
+mvto va00 va01
+subv va00 175
+gsub inject
+mvto va00 va01
+
+
+subr inject
+	new: vhcl 3 3 222 "alcv" 6 0 500
+	cabp 1
+	cabn 5 20 145 291
+	attr 215
+	accg 5
+	elas 0
+	perm 100
+	setv ov00 1
+	tick 30
+retn
+
+scrp 3 3 222 1
+	gene load ownr 1 "borgNorn.v2"
+	newc 4 ownr 1 0 0
+	accg game "c3_creature_accg"
+	bhvr game "c3_creature_bhvr"
+	attr game "c3_creature_attr"
+	perm game "c3_creature_perm"
+	setv va91 11
+	addv va91 gnus
+	emit va91 0.5
+	drea 1
+
+	born
+	seta va00 targ
+	targ ownr
+	setv va01 posx
+	setv va02 posy
+	targ va00
+	mvsf va01 va02
+endm
+
+scrp 3 3 222 9
+	setv va00 0
+	doif ov00 eq 0
+		epas 0 0 0
+			doif crea targ eq 1
+				addv va00 1
+			endi
+		next
+		doif va00 eq 0
+			targ ownr
+			setv ov00 1
+			pose 0
+		endi
+	endi
+endm
+
+scrp 3 3 222 4
+	setv ov00 0
+endm
+
+scrp 3 3 222 5
+	setv ov00 1
+endm
+
+rscr
+enum 3 3 222
+	kill targ
+next
