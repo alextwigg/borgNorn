@@ -14,8 +14,8 @@ scrp 4 0 0 69
 *set BN coordinates and record targ
 		setv va03 posx
 		setv va04 posy
-		subv va03 75
-		subv va04 115
+		subv va03 115
+		subv va04 160
 		seta va02 targ
 		targ ownr
 *set loop limits
@@ -33,14 +33,14 @@ scrp 4 0 0 69
 					setv ov00 0
 					setv va05 posx
 					setv va06 posy
-					subv va05 68
-					addv va06 20
+					subv va05 100
+					subv va06 100
 					seta va10 targ
-					new: simp 3 2 222 "brg_tele" 15 0 5000
+					new: simp 3 2 222 "BN_tele" 24 0 5000
 					tick 1
 					mvto va03 va04
 					wait 7
-					new: simp 3 2 222 "brg_tele" 15 0 5000
+					new: simp 3 2 222 "BN_tele" 24 0 5000
 					tick 1
 					mvto va05 va06
 					wait 3

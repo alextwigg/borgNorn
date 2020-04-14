@@ -1,0 +1,193 @@
+inst
+rtar 1 1 222
+setv va00 posx
+setv va01 posy
+setv va02 posx
+setv va03 posy
+addv va00 513
+addv va01 990
+
+new: vhcl 3 1 222 "BN_lift_a" 1 0 50
+cabn 44 44 189 239
+attr 4
+bhvr 1
+mvto va00 va01
+setv ov00 0
+setv ov01 posl
+setv ov02 post
+setv ov03 1.83806
+setv ov04 -9.82963
+
+new: simp 2 12 222 "BN_lift_a" 2 1 50
+attr 4
+bhvr 1
+setv va04 va02
+setv va05 va03
+addv va04 578
+addv va05 651
+mvto va04 va05
+setv ov00 0
+
+new: simp 2 12 222 "BN_lift_a" 2 1 50
+attr 4
+bhvr 1
+setv va04 va02
+setv va05 va03
+addv va04 752
+addv va05 1143
+mvto va04 va05
+setv ov00 1
+
+new: vhcl 3 1 223 "BN_lift_b" 1 0 50
+cabn 25 12 120 154
+attr 4
+bhvr 1
+setv va04 va02
+setv va05 va03
+addv va04 1743
+addv va05 624
+mvto va04 va05
+setv ov00 0
+setv ov01 post
+subv ov01 10
+
+new: simp 2 12 223 "BN_lift_b" 2 1 51
+attr 4
+bhvr 1
+setv va04 va02
+setv va05 va03
+addv va04 1700
+addv va05 695
+mvto va04 va05
+setv ov00 1
+
+new: simp 2 12 223 "BN_lift_b" 2 1 51
+attr 4
+bhvr 1
+setv va04 va02
+setv va05 va03
+addv va04 1700
+addv va05 442
+mvto va04 va05
+setv ov00 0
+
+endm
+
+scrp 3 1 222 1
+	setv va00 ov01
+	setv va01 ov02
+	addv va00 92
+	subv va01 492
+	inst
+	doif from eq pntr or crea from eq 1
+		gpas 4 0 0 1
+	endi
+	doif ov00 eq 0
+		lock
+		slow
+		loop
+			velo ov03 ov04
+			setv va02 post
+		untl va02 lt va01
+		velo 0 0
+		setv ov00 1
+		unlk
+	elif ov00 eq 1
+		lock
+		slow
+		loop
+			setv va00 ov03
+			setv va01 ov04
+			mulv va00 -1
+			mulv va01 -1
+			velo va00 va01
+			setv va02 post
+		untl va02 gt ov02
+		velo 0 0
+		mvto ov01 ov02
+		setv ov00 0
+	endi
+	inst
+	dpas 0 0 0
+	epas 4 0 0
+		doif targ ne null
+			stim writ targ 94 0.2
+		endi
+	next
+endm
+
+scrp 2 12 222 1
+	inst
+	rtar 3 1 222
+	doif targ ne null
+		doif ov00 eq mv00
+			mesg writ targ 0
+		endi
+		doif crea from eq 1
+			stim writ from 89 0.2
+		endi
+	endi
+endm
+
+scrp 3 1 223 1
+	setv va00 ov01
+	setv va01 ov01
+	subv va01 253
+	inst
+	doif from eq pntr or crea from eq 1
+		gpas 4 0 0 0
+	endi
+	doif ov00 eq 0
+		lock
+		slow
+		loop
+			velo 0 -5
+		untl post lt va01
+		velo 0 0
+		setv ov00 1
+		unlk
+	elif ov00 eq 1
+		lock
+		slow
+		loop
+			velo 0 5
+		untl post gt va00
+		velo 0 0
+*mvto ov01 ov02
+		setv ov00 0
+	endi
+	inst
+	dpas 0 0 0
+	epas 4 0 0
+		doif targ ne null
+			stim writ targ 94 0.2
+		endi
+	next
+endm
+
+scrp 2 12 223 1
+	inst
+	rtar 3 1 223
+	doif targ ne null
+		doif ov00 eq mv00
+			mesg writ targ 0
+		endi
+		doif crea from eq 1
+			stim writ from 89 0.2
+		endi
+	endi
+endm
+
+rscr
+enum 3 1 222
+	kill targ
+next
+enum 2 12 222
+	kill targ
+next
+enum 3 1 223
+	kill targ
+next
+enum 2 12 223
+	kill targ
+next

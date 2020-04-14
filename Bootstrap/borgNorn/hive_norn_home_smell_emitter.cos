@@ -1,0 +1,17 @@
+inst
+rtar 1 1 222
+setv va00 posx
+setv va01 posy
+
+addv va00 316
+addv va01 616
+
+new: simp 1 3 222 "hive_ref" 1 0 0
+emit 15 1
+attr 16
+mvto va00 va01
+
+rscr
+enum 1 3 222
+	kill targ
+next

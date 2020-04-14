@@ -1,0 +1,270 @@
+inst
+setv va03 0
+setv va06 0
+loop
+	rtar 1 1 222
+	setv va00 posx
+	setv va01 posy
+	addv va00 1437
+	addv va00 rand -400 400
+	addv va01 620
+	setv va02 rand 100 6000
+	new: simp 2 4 223 "hive_nuts" 14 0 va02
+	attr 192
+	elas 0
+	fric 100
+
+	doif tmvt va00 va01 eq 1
+		mvto va00 va01
+*ov00 is the growth state
+		setv ov00 0
+*ov01 counts the finger vines
+		setv ov01 0
+		subv va01 45
+		setv va04 grap va00 va01
+		setv va05 rtyp va04
+		doif va05 eq 5
+			tick 50
+			addv va03 1
+		elif va05 eq 6
+			tick 150
+			addv va03 1
+		else
+			kill targ
+		endi
+	else
+		kill targ
+		addv va06 1
+
+	endi
+untl va03 eq 1 or va06 eq 100
+endm
+
+scrp 2 4 223 9
+*set death state at random
+	setv va00 rand 1 75
+	doif va00 eq 75
+		setv ov00 1
+	endi
+*main body growth script
+	doif rand 0 15 gt 12 and pose lt 2 and ov00 eq 0
+		setv va00 pose
+		addv va00 1
+		pose va00
+	elif ov00 eq 1 and ov01 eq 0 and rand 0 15 gt 12
+		setv va00 pose
+		subv va00 1
+		doif va00 eq -1
+			kill targ
+		else
+			pose va00
+		endi
+	endi
+*add the finger vines
+	doif rand 0 5 eq 5 and ov01 lt 4 and ov00 eq 0
+		inst
+		setv va00 posx
+		setv va01 posy
+		setv va02 rand 0 1
+		setv va03 0
+		loop
+			addv va00 rand -50 50
+			addv va01 rand -24 24
+			addv va03 1
+		untl tran va00 va01 eq 0 or va03 eq 100
+		doif va03 lt 100
+			doif va02 eq 0
+				subv va00 12
+				subv va01 89
+				setv va04 3
+			else
+				subv va00 10
+				subv va01 68
+				setv va04 7
+			endi
+			setv va05 plne
+			subv va05 1
+			setv va06 tick
+			new: simp 2 4 224 "hive_nuts" 14 va04 va05
+			attr 78
+			tick va06
+			doif tmvt va00 va01 eq 1
+				mvto va00 va01
+*ov00 is the growth state
+				setv ov00 0
+*ov01 is the parent
+				seta ov01 ownr
+*ov02 is the full growth counter
+				setv ov02 0
+				addv mv01 1
+			else
+				kill targ
+			endi
+		endi
+	endi
+endm
+
+scrp 2 4 224 9
+*grow the vine
+	doif rand 0 5 eq 5 and pose lt 3 and ov00 eq 0
+		setv va00 pose
+		addv va00 1
+		pose va00
+	endi
+*keep the vine at full size
+	doif pose eq 3 and ov02 lt 20
+		addv ov02 1
+	elif ov02 eq 20
+		setv ov00 1
+		addv ov02 1
+	endi
+*Shrink and kill the vine
+	doif rand 0 5 gt 0 and ov00 eq 1
+		setv va00 pose
+		subv va00 1
+		doif va00 lt 0
+			targ mv01
+			doif targ ne null
+				subv ov01 1
+			endi
+			targ ownr
+			kill targ
+		else
+			pose va00
+		endi
+	endi
+*add the nuts
+	doif rand 0 4 gt 3
+		setv va00 posx
+		setv va01 posy
+		setv va02 0
+		loop
+			addv va00 rand -15 15
+			addv va01 rand -45 45
+			addv va02 1
+		untl tran va00 va01 eq 0 or va02 eq 20
+		doif va02 lt 20
+			inst
+			subv va00 7
+			subv va01 7
+			setv va03 tick
+			setv va04 plne
+			addv va04 1
+			new: simp 2 3 222 "hive_nuts" 14 11 va04
+			accg 1
+			elas 70
+			attr 78
+*ov00 is the parent
+			seta ov00 ownr
+			tick 1
+			rnge rand 150 250
+			doif tmvt va00 va01 eq 1
+				tint 128 128 128 rand 0 255 rand 0 255
+				mvto va00 va01
+			else
+				kill targ
+			endi
+			targ ownr
+			slow
+		endi
+	endi
+endm
+
+scrp 2 3 222 9
+	doif rand 1 100 eq 100 and pose lt 2 and attr ne 199
+		setv va00 pose
+		addv va00 1
+		pose va00
+	endi
+	setv va00 posx
+	setv va01 posy
+*addv va00 7
+*addv va01 10
+	setv va02 attr
+	targ ov00
+	doif targ ne null
+		doif tran va00 va01 eq 1 and va02 ne 199
+			targ ownr
+			attr 199
+			velo rand -3 3 rand -10 -2
+		endi
+	elif targ eq null and va02 ne 199
+		targ ownr
+		attr 199
+		velo rand -3 3 rand -10 -2
+	endi
+	targ ownr
+	doif attr eq 199
+		doif rand 0 100 eq 1
+			setv va00 pose
+			subv va00 1
+			doif va00 ne -1
+				pose va00
+			elif va00 eq -1
+				setv va00 posx
+				setv va01 post
+				subv va00 50
+				subv va01 60
+				setv va02 0
+				setv va03 rtyp grap va00 va01
+				esee 2 4 223
+					addv va02 1
+				next
+				doif va02 lt 5
+					setv va02 rand 100 6000
+					new: simp 2 4 223 "hive_nuts" 14 0 va02
+					attr 192
+					elas 0
+					fric 100
+					doif tmvt va00 va01 eq 1
+						mvto va00 va01
+*ov00 is the growth state
+						setv ov00 0
+*ov01 counts the finger vines
+						setv ov01 0
+						subv va01 45
+						doif va03 eq 5
+							tick 50
+							addv va03 1
+						elif va03 eq 6
+							tick 150
+							addv va03 1
+						else
+							kill targ
+						endi
+					else
+						kill targ
+					endi
+				endi
+				targ ownr
+				kill targ
+			endi
+		endi
+	endi
+
+endm
+
+scrp 2 3 222 12
+	lock
+	snde "leat"
+	targ from
+	doif targ ne null
+		stim writ targ 77 1
+	endi
+	targ ownr
+	kill targ
+endm
+
+rscr
+enum 2 4 223
+	kill targ
+next
+enum 2 4 224
+	kill targ
+next
+enum 2 3 222
+	kill targ
+next
+scrx 2 4 223 9
+scrx 2 4 224 9
+scrx 2 3 222 9

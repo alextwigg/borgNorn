@@ -33,7 +33,7 @@ mvto va00 va01
 subr inject
 	new: vhcl 3 3 222 "alcv" 6 0 500
 	cabp 1
-	cabn 5 20 145 291
+	cabn 0 0 108 150
 	attr 215
 	accg 5
 	elas 0

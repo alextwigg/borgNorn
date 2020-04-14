@@ -1,50 +1,167 @@
 inst
 setv va03 0
+setv va06 0
 loop
 	rtar 1 1 222
 	setv va00 posx
 	setv va01 posy
 	addv va00 1437
 	addv va00 rand -400 400
-	addv va01 1170
+	addv va01 1020
 	setv va02 rand 100 6000
-	new: comp 2 4 222 "tree_fungus" 7 0 va00
+	new: simp 2 4 222 "tree_fungus" 10 0 va02
 	attr 192
 	elas 0
 	fric 100
-	tick 50
-	mvto va00 va01
-	addv va03 1
-**Set vars**
-**
-*ov00 is the pose of the last piece
-	setv ov00 0
-*ov01 is the parent part
-	seta ov01 null
-*ov02 is the plane of the object
-	setv ov02 va02
 
-untl va03 eq 6
+	doif tmvt va00 va01 eq 1
+		mvto va00 va01
+		setv ov00 0
+		setv va04 grap va00 va01
+		setv va05 rtyp va04
+		doif va05 eq 5
+			tick 150
+			addv va03 1
+		elif va05 eq 6
+			tick 50
+			addv va03 1
+		else
+			kill targ
+		endi
+	else
+		kill targ
+		addv va06 1
+
+	endi
+untl va03 eq 3 or va06 eq 100
 
 scrp 2 4 222 9
-	doif obst _up_ gt 50
-		tick 0
-		setv va00 posl
-		setv va01 post
-		subv va01 29
-		new: comp 2 4 222 "tree_fungus" 7 0 mv02
-		attr 68
-		elas 0
-		fric 100
-		tick 50
-		setv ov00 0
-		seta ov01 ownr
-		setv ov02 mv02
-		mvto va00 va01
+	doif rand 0 15 gt 12
+		setv va00 pose
+		doif va00 lt 7 and ov00 eq 0
+			addv va00 1
+		elif va00 eq 7 or ov00 eq 1
+			subv va00 1
+			setv ov00 1
+		endi
+		doif va00 eq -1
+			kill targ
+		endi
+		pose va00
 	endi
+	inst
+	setv va01 posx
+	setv va02 posy
+	setv va03 plne
+	addv va03 1
+	setv va04 0
+	loop
+		addv va01 rand -100 100
+		addv va02 rand -100 100
+		addv va04 1
+	untl tran va01 va02 eq 0 or va04 eq 800
+	doif va04 lt 800
+		new: simp 2 8 222 "tree_fungus" 10 8 va03
+		subv va01 8
+		subv va02 8
+		seta ov00 ownr
+		elas 10
+		tick 1
+		attr 78
+		rnge 250
+		doif tmvt va01 va02 eq 1
+			tint 128 128 128 rand 0 255 rand 0 255
+			emit 6 0.5
+			bhvr 48
+			mvto va01 va02
+		else
+			kill targ
+		endi
+	endi
+endm
+
+scrp 2 8 222 9
+	setv va00 pose
+	inst
+	setv va01 posx
+	setv va02 posy
+	targ ov00
+	doif targ ne null
+		setv va03 tran va01 va02
+	else
+		setv va03 1
+	endi
+	targ ownr
+	slow
+	doif va00 lt 2 and rand 0 50 eq 50
+		addv va00 1
+		pose va00
+	elif va03 eq 1 and attr ne 199
+		attr 199
+		velo rand -15 15 0
+	endi
+	doif attr eq 199
+		setv va00 pose
+		subv va00 1
+		doif va00 eq -1
+			setv va00 0
+			esee 2 4 222
+				addv va00 1
+			next
+			targ ownr
+			doif va00 lt 5
+				setv va00 posx
+				setv va01 posy
+				subv va00 58
+				subv va01 155
+				new: simp 2 4 222 "tree_fungus" 10 0 va02
+				attr 192
+				elas 0
+				fric 100
+				tick 50
+				doif tmvt va00 va01 eq 1
+					mvto va00 va01
+					setv ov00 0
+					setv va04 grap va00 va01
+					setv va05 rtyp va04
+					doif va05 eq 5
+						tick 150
+					elif va05 eq 6
+						tick 50
+					else
+						kill targ
+					endi
+
+				else
+					kill targ
+
+				endi
+			endi
+			targ ownr
+			kill targ
+		else
+			doif rand 0 15 eq 15
+				pose va00
+			endi
+		endi
+	endi
+endm
+
+scrp 2 8 222 12
+	lock
+	snde "leat"
+	targ from
+	doif targ ne null
+		stim writ targ 78 1
+	endi
+	targ ownr
+	kill targ
 endm
 
 rscr
 enum 2 4 222
+	kill targ
+next
+enum 2 8 222
 	kill targ
 next

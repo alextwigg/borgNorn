@@ -1,5 +1,5 @@
 inst
-new: simp 2 3 222 "bgprb" 22 0 1000
+new: simp 3 8 222 "bgprb" 22 0 1000
 mvto 1052 9425
 attr 199
 bhvr 8
@@ -21,7 +21,7 @@ setv ov03 0
 *Acts as a delay timer so the probe waits before following a creature.
 setv ov04 0
 
-scrp 2 3 222 9
+scrp 3 8 222 9
 	setv va00 posx
 	setv va01 posy
 	setv va02 rand 1 9
@@ -175,7 +175,7 @@ scrp 2 3 222 9
 	retn
 endm
 
-scrp 2 3 222 3
+scrp 3 8 222 3
 	targ from
 	doif fmly eq 4
 		stim writ targ 97 1
@@ -191,7 +191,7 @@ scrp 2 3 222 3
 endm
 
 
-scrp 2 3 222 1
+scrp 3 8 222 1
 	doif ov03 eq 0
 		setv ov03 1
 		loop
@@ -215,9 +215,9 @@ endm
 
 
 rscr
-enum 2 3 222
+enum 3 8 222
 	kill targ
 next
-scrx 2 3 222 9
-scrx 2 3 222 3
-scrx 2 3 222 1
+scrx 3 8 222 9
+scrx 3 8 222 3
+scrx 3 8 222 1

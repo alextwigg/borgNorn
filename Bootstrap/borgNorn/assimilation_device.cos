@@ -8,8 +8,8 @@ pat: butt 1 "assm" 4 3 0 -40 1 [0] 1001 0
 pat: butt 2 "assm" 3 3 40 -40 1 [0] 1002 0
 pat: butt 3 "assm" 6 1 80 -40 1 [0] 1003 0
 pat: butt 4 "assm" 5 2 120 -40 1 [0] 1004 0
-gene load targ 1 "bgn_v2"
-gene load targ 2 "bgn_v2"
+*gene load targ 1 "bgn_v2"
+*gene load targ 2 "bgn_v2"
 *ov00 = click counter
 setv ov00 0
 *ov01 = norn storage
